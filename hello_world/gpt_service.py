@@ -4,7 +4,7 @@ from gpt_model import MessageRequestDTO
 
 
 openai.organization = os.getenv('ORGANIZATION_ID')
-openai.api_key = os.getenv('OPENAI_API_KEY')
+openai.api_key = os.getenv('OPEN_AI_API_KEY')
 
 
 class ChatGptService:

@@ -1,7 +1,9 @@
 import json
-
+from gpt_service import ChatGptService
 # import requests
 
+def list_models():
+    return ChatGptService.list_models()
 
 def lambda_handler(event, context):
     """Sample pure Lambda function
@@ -36,7 +38,8 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": "hello world",
+            "version":2,
+            "message": list_models(),
             # "location": ip.text.replace("\n", "")
         }),
     }
