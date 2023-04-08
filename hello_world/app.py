@@ -1,45 +1,66 @@
 import json
 from gpt_service import ChatGptService
+from gpt_model import MessageRequestDTO
 # import requests
+ 
+def get_ai_answer(data:dict):
+    return ChatGptService.get_ai_model_answer(MessageRequestDTO.new_instance_from_flask_body(data))
 
 def list_models():
     return ChatGptService.list_models()
 
 def lambda_handler(event, context):
-    """Sample pure Lambda function
-
-    Parameters
-    ----------
-    event: dict, required
-        API Gateway Lambda Proxy Input Format
-
-        Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
-
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-        Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
-
-    Returns
-    ------
-    API Gateway Lambda Proxy Output Format: dict
-
-        Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-    """
-
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
-
+    print('event >>',event)
+    print('context >>',context)
+   
     #     raise e
 
+    if event['httpMethod'] == 'POST':
+        body = event.get('body')  # get the value of 'body' key from event
+        if body:
+            try:
+                body = json.loads(body)
+            except ValueError:
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({
+                        "error": "Invalid JSON in request body",
+                    }),
+                }
+
+            return {
+                "statusCode": 200,
+                "body": json.dumps({
+                    "version": 3,
+                    "message": get_ai_answer(body),
+
+                }),
+            }
+        else:
+            return {
+                "statusCode": 400,
+                "body": json.dumps({
+                    "error": "Request body is empty",
+                }),
+            }
+        
+    #    ### if 'body' not in event:
+    #         return {
+    #             "statusCode": 400,
+    #             "body": json.dumps({
+    #                 "version": 3,
+    #                 "result": {
+    #                     "err": "Empty body,Found !!"
+    #                 },
+    #             }),
+    #         } ###
+
+    
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "version":2,
+            "version": 3,
             "message": list_models(),
-            # "location": ip.text.replace("\n", "")
+            
         }),
     }

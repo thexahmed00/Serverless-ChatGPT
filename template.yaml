@@ -20,16 +20,22 @@ Resources:
       Runtime: python3.9
       Environment:
         Variables:
-          ORGANIZAION_ID: "org-agCZUCUX3NLt8L2swaRFOTvs"
-          OPEN_AI_API_KEY: "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"
+          ORGANIZAION_ID: "org-wQZNR8qyaxUxWJkjRFriV5rr"
+          OPEN_AI_API_KEY: "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"
       Architectures:
       - x86_64
       Events:
-        HelloWorld:
+        ListModels:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /model
             Method: get
+        CreateQuestion:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /message
+            Method: post
+
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
@@ -49,8 +55,11 @@ Outputs:
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   ListModelsApi:
-    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Description: API Gateway endpoint URL for Prod stage for models of chat gpt
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/model/"
+  CreateQuestionApi:
+    Description: API Gateway endpoint URL for chat gpt message
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/message/"
   ChatgptHandlerFunction:
     Description: Hello World Lambda Function ARN
     Value: !GetAtt ChatgptHandlerFunction.Arn

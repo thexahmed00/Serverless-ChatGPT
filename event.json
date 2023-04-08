@@ -1,0 +1,7 @@
+{
+    "httpMethod": "POST",
+    "body": "{\"question\":\"hello chatgpt !!\"}",
+    "headers": {
+        "Content-Type": "application/json"
+    }
+}
